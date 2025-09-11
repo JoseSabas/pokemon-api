@@ -4,26 +4,20 @@ import { PokemonListData, PokemonDetailData, SimplifiedPokemon } from "../interf
 export const fetchPokemons = async(limit:number, page:number):Promise<SimplifiedPokemon[]> => {
   const offset = (page - 1) * limit;
 
-  const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
-  const pokemonList: PokemonListData = response.data;
+  const {data:pokemonList} = await axios.get<PokemonListData>(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
 
   const pokemonData = await Promise.allSettled(
-    pokemonList.results.map(async (pokemon) => {
-      try {
-        const detailResponse = await axios.get(pokemon.url);
-        const detailData: PokemonDetailData = detailResponse.data;
+    pokemonList.results.map(async({url}) => {
+      const {data:detailData} = await axios.get<PokemonDetailData>(url);
 
-        return {
-          name: detailData.name,
-          types: detailData.types.map((t) => t.type.name),
-        };
-      } catch (err) {
-        return null;
-      }
+      return {
+        name: detailData.name,
+        types: detailData.types.map((t) => t.type.name),
+      };
     })
   );
 
   return pokemonData
-    .filter((result) => result.status === "fulfilled" && result.value !== null)
+    .filter((result) => result.status === "fulfilled")
     .map((result) => (result as PromiseFulfilledResult<SimplifiedPokemon>).value);
 };
