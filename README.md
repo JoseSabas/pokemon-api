@@ -14,5 +14,5 @@ npx serverless offline
 ```
 
 ## Usage
-° Get all pokemos: http://localhost:3000/pokemons
-° Get pokemons paginated: http://localhost:3000/pokemons?limit=20&page=1
+- Get all pokemos: http://localhost:3000/pokemons (GET)
+- Get pokemons paginated: http://localhost:3000/pokemons?limit=20&page=1 (GET)
