@@ -18,6 +18,8 @@ export interface PokemonListData {
   results: PokemonListResult[];
 }
 
+////////////////////////////////////////////////////////////////////////
+
 /*{
   "id": 1,
   "name": "bulbasaur",

@@ -1,10 +1,14 @@
 import axios from "axios";
 import { PokemonListData, PokemonDetailData, SimplifiedPokemon } from "../interfaces/PokemonApiResponses";
 
+const POKEAPI_BASE_URL = "https://pokeapi.co/api/v2";
+
 export const fetchPokemons = async(limit:number, page:number):Promise<SimplifiedPokemon[]> => {
   const offset = (page - 1) * limit;
 
-  const {data:pokemonList} = await axios.get<PokemonListData>(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
+  const {data:pokemonList} = await axios.get<PokemonListData>(`${POKEAPI_BASE_URL}/pokemon`, {
+    params: {limit, offset}
+  });
 
   const pokemonData = await Promise.allSettled(
     pokemonList.results.map(async({url}) => {
